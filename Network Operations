@@ -1,0 +1,85 @@
+# Adding Temporary IP Addresses to Server's Network Interface
+
+## Overview
+
+This guide outlines the process for adding two temporary IP addresses to the `ens3` network interface of an Ubuntu 22.04 server. These IP addresses are added for short-term tasks, such as A/B testing, and will be removed after a reboot.
+
+## Prerequisites
+
+- Ubuntu 22.04 server
+- Network interface `ens3`
+- Administrative privileges (sudo access)
+
+## Steps
+
+### 1. Verify Current IP Addresses
+
+To start, review the current IP addresses assigned to the `ens3` network interface. Run the following command:
+
+```bash
+ip -4 -br address show
+```
+
+You should see output similar to this:
+
+```
+ens3      UP 192.168.100.200/24
+```
+
+This indicates that the `ens3` interface currently has one IP address (`192.168.100.200/24`).
+
+### 2. Add the First Temporary IP Address
+
+Next, add the first temporary IP address (`192.168.100.210/24`) to the `ens3` interface by running:
+
+```bash
+sudo ip addr add 192.168.100.210/24 dev ens3
+```
+
+No output will be returned, but the IP address will be successfully added.
+
+### 3. Verify the Addition of the First IP Address
+
+To verify that the first IP address was added successfully, run:
+
+```bash
+ip -4 -br address show
+```
+
+Expected output:
+
+```
+ens3      UP 192.168.100.200/24 192.168.100.210/24
+```
+
+### 4. Add the Second Temporary IP Address
+
+Now, add the second temporary IP address (`192.168.100.220/24`) using the following command:
+
+```bash
+sudo ip addr add 192.168.100.220/24 dev ens3
+```
+
+No output will be shown, but the second IP address will be successfully added.
+
+### 5. Verify the Addition of Both Temporary IP Addresses
+
+To verify that both temporary IP addresses were added successfully, run:
+
+```bash
+ip -4 -br address show
+```
+
+Expected output:
+
+```
+ens3      UP 192.168.100.200/24 192.168.100.210/24 192.168.100.220/24
+```
+
+### 6. Reboot Considerations
+
+Keep in mind that the IP addresses added using the `ip addr add` command are temporary and will be removed upon server reboot. If permanent configuration is needed, you can add the IP addresses through the netplan configuration file.
+
+## Conclusion
+
+In this guide, we added two temporary IP addresses to the `ens3` network interface of an Ubuntu 22.04 server for A/B testing. These IP addresses will be removed upon reboot. This method allows for easy temporary network configuration changes without permanent alteration to the system’s configuration files.
